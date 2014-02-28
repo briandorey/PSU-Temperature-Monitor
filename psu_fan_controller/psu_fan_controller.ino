@@ -5,7 +5,7 @@ int fanPin = 3;     // set output pin for the fan
 //void get_ambient();
 
 float maxtemp = 0;
-
+int fanspeed = 0;
 
 void setup()
 {
@@ -40,30 +40,12 @@ void loop()
   if (get_temperature(0x4B) > maxtemp){
      maxtemp = get_temperature(0x4B); 
   }
-
-  if (maxtemp < 30){
-      analogWrite(fanPin, 55);
-  }
-  if (maxtemp >= 30 && maxtemp < 35){
-      analogWrite(fanPin, 70);
-  }
-  if (maxtemp >= 35 && maxtemp < 40){
-      analogWrite(fanPin, 100);
-  }
-  if (maxtemp >= 45 && maxtemp < 50){
-      analogWrite(fanPin, 125);
-  }
-  if (maxtemp >= 55 && maxtemp < 60){
-      analogWrite(fanPin, 155);
-  }
-  if (maxtemp >= 60 && maxtemp < 65){
-      analogWrite(fanPin, 200);
-  }
-  if (maxtemp >= 65){
-      analogWrite(fanPin, 255);
-  }
+  
+  fanspeed = min(max(70, 7.5 * (max(1, maxtemp - 30))), 255);
+  analogWrite(fanPin, fanspeed); 
 
   Serial.print("Max Temperature:");Serial.println(maxtemp);
+  Serial.print("Fan Speed:");Serial.println(fanspeed);
   delay(1000);
 }
 
